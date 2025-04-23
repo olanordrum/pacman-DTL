@@ -6,12 +6,12 @@ from entity import Entity
 from sprites import PacmanSprites
 from heapq import heappush, heappop
 from pellets import PelletGroup,Pellet
-from fsm import StateMachine
+#from fsm import StateMachine
 from random import choice
 
 
 class Pacman(Entity):
-    def __init__(self, node, nodes, pellets):
+    def __init__(self, node, nodes, pellets,controller ):
         Entity.__init__(self, node )
         self.name = PACMAN    
         self.color = YELLOW
@@ -20,6 +20,8 @@ class Pacman(Entity):
         self.alive = True
         self.sprites = PacmanSprites(self)
         self.nodes = nodes # all nodes
+        
+        self.controller = controller
     
         
         self.directionMethod = self.seekPellet
@@ -35,9 +37,6 @@ class Pacman(Entity):
         
         self.pellets = pellets.pelletList
         self.allPowerPellets = pellets.powerpellets
-        
-        self.statemachine = StateMachine(self)
-        self.statemachine.init_csv()
         
         
 
@@ -60,19 +59,16 @@ class Pacman(Entity):
         
         
     def update(self, dt):
-
         self.sprites.update(dt)
-        
-        
-        #Check for event and update states each update
-        self.statemachine.checkEvent(dt)
-        
-        
+ 
         #Update direction methods according to states
-        self.stateChecker()
-        
+        newState = self.controller.getState()
+        print(self.myState)
 
-        
+
+        self.myState = newState
+        self.stateChecker()
+ 
         self.position += self.directions[self.direction]*self.speed*dt
         
         if self.overshotTarget():
@@ -233,19 +229,26 @@ class Pacman(Entity):
     #Check states and sets directionMethod accordingly
     def stateChecker(self):
         if self.myState == SEEKPELLET:
+            print("seek pellet")
+            
             self.directionMethod = self.seekPellet
             
         elif self.myState == SEEKPOWERPELLET:
+            print("seek power")
             if self.powerPellets:
                 self.directionMethod = self.seekPowerPellet
             else:
+                print("seek pellet")
+                
                 self.myState = SEEKPELLET
                 self.directionMethod = self.seekPellet
             
         elif self.myState == SEEKGHOST:
+            print("seek ghost")
             self.directionMethod = self.huntGhostAstar
             
         elif self.myState == FLEE:
+            print("flee")
             self.directionMethod = self.flee
             
             
