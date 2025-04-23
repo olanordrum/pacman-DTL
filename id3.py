@@ -7,31 +7,25 @@ class DecisionNode:
         self.childNodes : dict[str,DecisionNode] = {}  
         self.testValue : str | None = None # Either string or None
         self.possibleValues = [] # All possible values the node can hold
-        self.prediction : int | None = None
-        self.isLeaf = False
+        self.action: int | None = None
         
         
         
     # Recusive function to print the decision tree
     def print(self, level: int = 0):
-        if len(self.childNodes) <= 0:
-            return
-        
         space = "  "
         print("\n", space * level, "Level :", level)
         print(space * level, "Test Value :", self.testValue)
-        
-        if self.isLeaf:
-            print(space * level, "Prediction:", self.prediction )
-                    
         print("Possible Values :", self.possibleValues)
-        for attribute in self.childNodes:
-            node = self.childNodes[attribute]
-            print(space * level, "Attribute : ", attribute)
-            node.print(level + 1)
-           
-
-                
+        
+        if len(self.childNodes) > 0:
+            for attribute in self.childNodes:
+                node = self.childNodes[attribute]
+                print(space * level, "Attribute : ", attribute)
+                node.print(level + 1)
+        else:
+            print("Leaf Node")
+              
                 
                 
                 
@@ -50,26 +44,18 @@ class Example:
 
 
 
-
 def makeTree(examples: list[Example], attributes: list [str | None], decisionNode):
-    
     initEntropy = calculateEntropy(examples)
     
-    #No initial entropy
+    #No entropy -> all examples have same action (leaf)
     if initEntropy <= 0: 
-        decisionNode.isLeaf = True
-        decisionNode.prediction = examples[0].action
-        
-        print("Action; ", examples[0].action)
+        decisionNode.action = examples[0].action
         return
     
     exampleCount = len(examples)
     
-
-    if len(attributes) == 0 or all( a is None for a in attributes): #No attributes
-        print("Morn")
-        decisionNode.isLeaf = True
-        decisionNode.prediction = examples[0].action
+    if all( a is None for a in attributes): #No attributes
+        decisionNode.action = examples[0].action
         return
     
     bestInformationGain = 0.0
@@ -115,23 +101,12 @@ def makeTree(examples: list[Example], attributes: list [str | None], decisionNod
         attributeValue = None
         
         for set in bestSets.values():
-            # Find the value for the attribute in this set.
             attributeValue = set[0].getValue(bestAttributeIndex)
-
-            # Create a daughter node for the tree.
             daughter = DecisionNode()
-
-            # Add it to the tree.
             decisionNode.childNodes[attributeValue] = daughter
 
             makeTree(set, newAttributes, daughter)
          
-        
-        
-        
-        
-        
-        
         
         
         
@@ -217,8 +192,6 @@ with open(filename, newline = "", encoding="utf-8") as csvfile:
         allExamples.append(Example(action, parsed_values))
     
 
-    
-tree = DecisionNode()
-makeTree(allExamples, allAttributes, tree)
 
-tree.print()
+ 
+    
