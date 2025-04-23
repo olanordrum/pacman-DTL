@@ -12,6 +12,7 @@ from sprites import LifeSprites
 from sprites import MazeSprites
 from mazes import MazeController
 from mazedata import MazeData######
+from controller import Controller
 
 class GameController(object):
     def __init__(self):
@@ -35,7 +36,8 @@ class GameController(object):
         self.fruitNode = None
         self.maze = MazeController()
         self.mazedata = MazeData()######
-
+        self.controller = Controller()
+        
     def setBackground(self):
         self.background_norm = pygame.surface.Surface(SCREENSIZE).convert()
         self.background_norm.fill(BLACK)
@@ -56,7 +58,8 @@ class GameController(object):
         
         #Create pac
         self.pellets = PelletGroup(self.mazedata.obj.name+".txt",self.nodes)
-        self.pacman = Pacman(self.nodes.getNodeFromTiles(*self.mazedata.obj.pacmanStart),self.nodes,self.pellets)
+        self.pacman = Pacman(self.nodes.getNodeFromTiles(*self.mazedata.obj.pacmanStart),self.nodes,self.pellets,self.controller)
+        self.controller.setPacman(self.pacman)
         
         #Creeate Ghosts
         self.ghosts = GhostGroup(self.nodes.getStartTempNode(), self.pacman)
@@ -97,7 +100,6 @@ class GameController(object):
         self.ghosts = GhostGroup(self.nodes.getStartTempNode(), self.pacman)
         
         #Get ghosts
-        
         self.ghosts.blinky.setStartNode(self.nodes.getNodeFromTiles(2+11.5, 0+14))
         self.ghosts.pinky.setStartNode(self.nodes.getNodeFromTiles(2+11.5, 3+14))
         self.ghosts.inky.setStartNode(self.nodes.getNodeFromTiles(0+11.5, 3+14))
