@@ -82,7 +82,8 @@ class StateMachine(object):
         # Count down time or stop seeking ghost
         if self.pacman.myState == SEEKGHOST:
             self.time -= dt  
-            self.observe_and_log(close, pelletEatenBool,closePP,self.time)
+            #Hardcoded True because as long as (state = seekghost) PP is True
+            self.observe_and_log(close, True,closePP,self.time)
             
             if self.time <= 0:
                 self.pacman.myState = SEEKPELLET
