@@ -49,7 +49,7 @@ class Controller:
     def makeDecisionTree(self):
         allExamples = []
         allAttributes = []
-        filename = "pacman_training_data.csv"
+        filename = "pacman_training_data4.csv"
 
         with open(filename, newline = "", encoding="utf-8") as csvfile:
             reader = csv.reader(csvfile)
