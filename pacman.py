@@ -63,8 +63,6 @@ class Pacman(Entity):
  
         #Update direction methods according to states
         newState = self.controller.getState()
-        print(self.myState)
-
 
         self.myState = newState
         self.stateChecker()
@@ -229,28 +227,21 @@ class Pacman(Entity):
     #Check states and sets directionMethod accordingly
     def stateChecker(self):
         if self.myState == SEEKPELLET:
-            print("seek pellet")
-            
             self.directionMethod = self.seekPellet
             
         elif self.myState == SEEKPOWERPELLET:
-            print("seek power")
             if self.powerPellets:
                 self.directionMethod = self.seekPowerPellet
             else:
-                print("seek pellet")
                 
                 self.myState = SEEKPELLET
                 self.directionMethod = self.seekPellet
             
         elif self.myState == SEEKGHOST:
-            print("seek ghost")
             self.directionMethod = self.huntGhostAstar
             
         elif self.myState == FLEE:
-            print("flee")
             self.directionMethod = self.flee
-            
             
             
     #PAC MAN direction methods
