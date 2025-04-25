@@ -6,6 +6,7 @@ import os
 
 
 
+        
 class StateMachine(object):
     def __init__(self, pacman):
         self.pacman = pacman
@@ -18,7 +19,6 @@ class StateMachine(object):
             "state_time_left",
             "pacman_state"
             ]
-        
         
     # Checks if the closest ghost is closer than some threshold
     def ghostClose(self,distance):
@@ -154,10 +154,10 @@ class StateMachine(object):
             
             
     
+                    
     
 
             
-                    
         
         
         
