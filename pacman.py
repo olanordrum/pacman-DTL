@@ -73,7 +73,7 @@ class Pacman(Entity):
         
         if self.overshotTarget():
             self.node = self.target
-            directions = self.validDirections()
+            directions = self.validDirections(True, self.myState)
             direction = self.directionMethod(directions)
             if not self.disablePortal:
                 if self.node.neighbors[PORTAL] is not None:

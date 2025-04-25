@@ -78,11 +78,14 @@ class Entity(object):
                 return True
         return False
 
-    def validDirections(self):
+    def validDirections(self, reverseAllowed = False, state = 0 ):
         directions = []
         for key in [UP, DOWN, LEFT, RIGHT]:
             if self.validDirection(key):
-                if key != self.direction * -1:
+                if key == self.direction * -1 and reverseAllowed and state == 4:
+                    directions.append(key)
+                    
+                elif key != self.direction * -1:
                     directions.append(key)
         if len(directions) == 0:
             directions.append(self.direction * -1)
